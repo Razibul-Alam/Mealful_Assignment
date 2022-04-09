@@ -1,31 +1,61 @@
 import React,{useState,useEffect} from 'react'
+import { Calendar } from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 function App() {
-  const allData=[
-    {month:2020,person:10},
-    {month:2021,person:20},
-    {month:2022,person:30}
-  ]
   const[meals,setMeals]=useState([])
+  const [value, onChange] = useState(new Date());
+  console.log(value.toLocaleDateString())
   useEffect(()=>{
 fetch('./Data.json')
 .then(res=>res.json())
 .then(data=>setMeals(data))
   },[])
-  console.log(meals)
-  const itemByDate=meals?.filter(meal=>new Date(meal.item_date).getFullYear()=='2021')
-  console.log(itemByDate)
-  // const date=new Date('2021-06-19')
-  // console.log(date.getMonth()+1)
-  // const allMonths=[1,2,3,4]
-  const allMonths=['january','February','March','April','May','June','July','August','Sep','Nov','Dec']
+ 
+ 
+ 
+  useEffect(()=>{
+    const datedata=meals?.find(item=>item.schedule_date=='3/4/2022')
+    const datedata1=meals?.find(item=>item.schedule_date=='4/4/2022')
+    const datedata2=meals?.find(item=>item.schedule_date=='5/4/2022')
+    console.log(datedata,datedata1,datedata2)
+    setMeals([datedata,datedata1,datedata2])
+  },[value])
+console.log(meals)
+
+  // const dateitems=oneMonthitems?.filter(item=>new Date(item.schedule_time).getDate()=='20')
+//    function dfunc (arr){
+// for(let j=0;j<arr.length;j++){
+// let el=arr[j]
+// if(datesArray.indexOf(el.item_date)==-1){
+//   datesArray.push(el)
+// }
+// }
+//    }
+//    dfunc(oneMonthitems)
+
+// console.log(datesArray)
+
+  // let el;
+  // const something=(arr)=>{
+  //   for(let i=0;i<arr.length;i++){
+  //      el=meals[i]
+      
+  // }
+  // itemsArray.push({date:el?.schedule_time,items:arr.length,type:el?.slot})
+  // }
+  // something(dateitems)
+// console.log(itemsArray)
+
+  
+
   return (
     <>
     <ResponsiveContainer width="100%" aspect={3}>
         <LineChart
           width={800}
           height={300}
-          data={allData}
+          data={meals}
           margin={{
             top: 5,
             right: 30,
@@ -34,14 +64,17 @@ fetch('./Data.json')
           }}
         >
           <CartesianGrid strokeDasharray="3 3" interval={'preserveStartEnd'} />
-          <XAxis dataKey="month" />
+          <XAxis dataKey='schedule_date' onClick={()=>console.log()}/>
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey='person'stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey='person' stroke="#82ca9d" />
+          <Line type="monotone" dataKey='lunch'stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey='dinner' stroke="#82ca9d" />
         </LineChart>
       </ResponsiveContainer>
+      <div>
+      <Calendar onChange={onChange} value={value} />
+    </div>
       </>
   );
 }
